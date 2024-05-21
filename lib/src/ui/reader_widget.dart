@@ -221,7 +221,10 @@ class _ReaderWidgetState extends State<ReaderWidget>
     switch (state) {
       case AppLifecycleState.resumed:
         if (cameras.isNotEmpty && !_isCameraOn) {
-          onNewCameraSelected(cameras.first);
+          onNewCameraSelected(cameras.firstWhere((CameraDescription camera) =>
+            camera.lensDirection == widget.lensDirection,
+            orElse: () => cameras.first,
+          ));
         }
         break;
       case AppLifecycleState.detached:
