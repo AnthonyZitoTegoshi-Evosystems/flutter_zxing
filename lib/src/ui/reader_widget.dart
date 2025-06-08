@@ -323,8 +323,8 @@ class _ReaderWidgetState extends State<ReaderWidget>
       _isProcessing = true;
       try {
         final double cropPercent = widget.isMultiScan ? 0 : widget.cropPercent;
-        final int cropSize =
-            (min(image.width, image.height) * cropPercent).round();
+        final int cropSizeWidth = (image.width * cropPercent).round();
+        final int cropSizeHeight = (image.height * cropPercent).round();
 
         final bool swapAxes = isAndroid() &&
             MediaQuery.of(context).orientation == Orientation.portrait;
@@ -332,14 +332,14 @@ class _ReaderWidgetState extends State<ReaderWidget>
             swapAxes ? widget.verticalCropOffset : widget.horizontalCropOffset;
         final double verticalOffset =
             swapAxes ? -widget.horizontalCropOffset : widget.verticalCropOffset;
-        final int cropLeft = ((image.width - cropSize) ~/ 2 +
-                (horizontalOffset * (image.width - cropSize) / 2))
+        final int cropLeft = ((image.width - cropSizeWidth) ~/ 2 +
+                (horizontalOffset * (image.width - cropSizeWidth) / 2))
             .round()
-            .clamp(0, image.width - cropSize);
-        final int cropTop = ((image.height - cropSize) ~/ 2 +
-                (verticalOffset * (image.height - cropSize) / 2))
+            .clamp(0, image.width - cropSizeWidth);
+        final int cropTop = ((image.height - cropSizeHeight) ~/ 2 +
+                (verticalOffset * (image.height - cropSizeHeight) / 2))
             .round()
-            .clamp(0, image.height - cropSize);
+            .clamp(0, image.height - cropSizeHeight);
 
         final DecodeParams params = DecodeParams(
           imageFormat: _imageFormat(image.format.group),
@@ -348,8 +348,8 @@ class _ReaderWidgetState extends State<ReaderWidget>
           height: image.height,
           cropLeft: cropLeft,
           cropTop: cropTop,
-          cropWidth: cropSize,
-          cropHeight: cropSize,
+          cropWidth: cropSizeWidth,
+          cropHeight: cropSizeHeight,
           tryHarder: widget.tryHarder,
           tryRotate: widget.tryRotate,
           tryInverted: widget.tryInverted,
